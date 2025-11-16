@@ -1,20 +1,15 @@
-# fly.toml - Configuración Fly.io para Cypher Elections (Next.js)
+# fly.toml - Configuración de Fly.io para Cypher Elections
+# Aplicación: Next.js
+# Generado automáticamente - Compatible con detección de Fly.io
 
 app = "cypher-elections"
 primary_region = "iad"
 
 [build]
-  builder = "heroku"
-
-[build.args]
-  NODE_ENV = "production"
+  dockerfile = "Dockerfile"
 
 [env]
-  NODE_ENV = "production"
-  LOG_LEVEL = "info"
-
-[deploy]
-  release_command = "npm run build"
+  PORT = "3000"
 
 [[services]]
   protocol = "tcp"
@@ -34,7 +29,6 @@ primary_region = "iad"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 1
-  processes = ["app"]
 
 [[vm]]
   cpu_kind = "shared"
