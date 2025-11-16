@@ -9,6 +9,7 @@ import CandidatesGrid from "./candidates-grid"
 import ElectionInfo from "./election-info"
 import VotingHoursCountdown from "./voting-hours-countdown"
 import VotingResults from "./voting-results"
+import ElectionSummaryHome from "./election-summary-home"
 import { calculateTimeLeft, getDarkMode, setDarkMode } from "@/lib/helpers"
 import { FIRST_ROUND_DATE, ELECTION_COLORS } from "@/lib/constants"
 import type { TimeLeft } from "@/lib/helpers"
@@ -176,6 +177,9 @@ export default function ElectionCountdown() {
             </div>
           )}
         </div>
+
+        {/* Election Summary Section - Only for 2025 tab */}
+        {activeTab === "2025" && <ElectionSummaryHome />}
       </div>
     </div>
   )
