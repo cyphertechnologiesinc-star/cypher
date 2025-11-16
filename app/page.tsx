@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import Lenis from "@studio-freight/lenis"
-import ElectionCountdown from "@/components/election-countdown"
+import ElectionDashboard from "@/components/election-dashboard"
 
 export default function Home() {
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <main>
-      <ElectionCountdown />
+      <ElectionDashboard />
     </main>
   )
 }
