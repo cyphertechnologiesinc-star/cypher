@@ -7,6 +7,7 @@ import ElectionTabs from "./election-tabs"
 import CountdownTimer from "./countdown-timer"
 import CandidatesGrid from "./candidates-grid"
 import ElectionInfo from "./election-info"
+import VotingHoursCountdown from "./voting-hours-countdown"
 import { calculateTimeLeft, getDarkMode, setDarkMode } from "@/lib/helpers"
 import { FIRST_ROUND_DATE, ELECTION_COLORS } from "@/lib/constants"
 import type { TimeLeft } from "@/lib/helpers"
@@ -139,6 +140,9 @@ export default function ElectionCountdown() {
 
               {/* Countdown Timer Component */}
               <CountdownTimer timeLeft={timeLeft} isDarkMode={isDarkMode} />
+
+              {/* Voting Hours Countdown Component */}
+              <VotingHoursCountdown isDarkMode={isDarkMode} />
 
               {/* Candidates Grid Component */}
               <CandidatesGrid isDarkMode={isDarkMode} />
