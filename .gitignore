@@ -50,3 +50,7 @@ next-env.d.ts
 # Generated files
 codes.zip
 code.zip
+
+# Fly.io
+.fly/
+
