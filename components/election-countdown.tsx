@@ -4,10 +4,11 @@ import { useEffect, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import ElectionTabs from "./election-tabs"
 import Election2021 from "./election-2021"
+import HistoricalElections from "./historical-elections"
 
 export default function ElectionCountdown() {
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [activeTab, setActiveTab] = useState<"2021" | "2025">("2025")
+  const [activeTab, setActiveTab] = useState<"2021" | "2025" | "historial">("2025")
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -342,7 +343,7 @@ export default function ElectionCountdown() {
                 </div>
               </div>
             </div>
-          ) : (
+          ) : activeTab === "2021" ? (
             <div
               className={`backdrop-blur-lg rounded-3xl shadow-2xl p-8 md:p-12 transition-colors duration-300 ${
                 isDarkMode
@@ -351,6 +352,16 @@ export default function ElectionCountdown() {
               }`}
             >
               <Election2021 isDarkMode={isDarkMode} />
+            </div>
+          ) : (
+            <div
+              className={`backdrop-blur-lg rounded-3xl shadow-2xl p-8 md:p-12 transition-colors duration-300 ${
+                isDarkMode
+                  ? "bg-gray-800/90 border border-gray-700"
+                  : "bg-white/10 border-2 border-white/20"
+              }`}
+            >
+              <HistoricalElections isDarkMode={isDarkMode} />
             </div>
           )}
         </div>

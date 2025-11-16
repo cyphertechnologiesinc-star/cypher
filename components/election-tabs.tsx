@@ -4,8 +4,8 @@ import { useState } from "react"
 
 interface ElectionTabsProps {
   isDarkMode: boolean
-  activeTab: "2021" | "2025"
-  onTabChange: (tab: "2021" | "2025") => void
+  activeTab: "2021" | "2025" | "historial"
+  onTabChange: (tab: "2021" | "2025" | "historial") => void
 }
 
 export default function ElectionTabs({
@@ -14,8 +14,9 @@ export default function ElectionTabs({
   onTabChange,
 }: ElectionTabsProps) {
   const tabs = [
-    { id: "2021", label: "Elección 2021", icon: "🗳️" },
     { id: "2025", label: "Elección 2025", icon: "📅" },
+    { id: "2021", label: "Elección 2021", icon: "🗳️" },
+    { id: "historial", label: "Historial (1975-2025)", icon: "📊" },
   ]
 
   return (
