@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { memo, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface PresidentialCandidate {
@@ -480,7 +480,7 @@ interface HistoricalElectionsProps {
   isDarkMode: boolean
 }
 
-export default function HistoricalElections({
+const HistoricalElections = memo(function HistoricalElections({
   isDarkMode,
 }: HistoricalElectionsProps) {
   const [selectedYear, setSelectedYear] = useState<number>(2021)
@@ -722,4 +722,6 @@ export default function HistoricalElections({
       </div>
     </div>
   )
-}
+})
+
+export default HistoricalElections

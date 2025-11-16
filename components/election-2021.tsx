@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { memo, useState } from "react"
 import { ChevronRight } from "lucide-react"
 
 interface Election2021Props {
   isDarkMode: boolean
 }
 
-export default function Election2021({ isDarkMode }: Election2021Props) {
+const Election2021 = memo(function Election2021({ isDarkMode }: Election2021Props) {
   const [showSecondRound, setShowSecondRound] = useState(false)
 
   const firstRoundCandidates = [
@@ -311,4 +311,6 @@ export default function Election2021({ isDarkMode }: Election2021Props) {
       )}
     </div>
   )
-}
+})
+
+export default Election2021

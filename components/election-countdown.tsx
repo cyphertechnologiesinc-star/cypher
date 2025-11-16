@@ -1,79 +1,91 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import { Moon, Sun } from "lucide-react"
+import dynamic from "next/dynamic"
 import ElectionTabs from "./election-tabs"
-import Election2021 from "./election-2021"
-import HistoricalElections from "./historical-elections"
+import CountdownTimer from "./countdown-timer"
+import CandidatesGrid from "./candidates-grid"
+import ElectionInfo from "./election-info"
+import { calculateTimeLeft, getDarkMode, setDarkMode } from "@/lib/helpers"
+import { FIRST_ROUND_DATE, ELECTION_COLORS } from "@/lib/constants"
+import type { TimeLeft } from "@/lib/helpers"
+
+// Dynamic imports for performance
+const Election2021 = dynamic(() => import("./election-2021"))
+const HistoricalElections = dynamic(() => import("./historical-elections"))
 
 export default function ElectionCountdown() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isDarkMode, setIsDarkModeState] = useState(false)
   const [activeTab, setActiveTab] = useState<"2021" | "2025" | "historial">("2025")
-
-  const [timeLeft, setTimeLeft] = useState({
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   })
+  const [mounted, setMounted] = useState(false)
 
-  const candidates = [
-    { name: "Jeanette Jara", party: "Comunista/Frente Amplio", winner: null },
-    { name: "Evelyn Matthei", party: "UDI/Chile Vamos", winner: null },
-    { name: "José Antonio Kast", party: "Republicano", winner: null },
-    { name: "Johannes Kaiser", party: "PLN", winner: null },
-    { name: "Franco Parisi", party: "Partido de la Gente", winner: null },
-    { name: "Marco Enríquez-Ominami", party: "Independiente", winner: null },
-    { name: "Harold Mayne-Nicholls", party: "Independiente", winner: null },
-    { name: "Eduardo Artés", party: "Independiente/Humanista", winner: null },
-  ]
-
+  // Initialize dark mode from localStorage on mount
   useEffect(() => {
-    const firstRoundDate = new Date("2025-11-16T00:00:00-03:00")
+    const savedDarkMode = getDarkMode()
+    setIsDarkModeState(savedDarkMode)
+    setMounted(true)
+  }, [])
 
-    const calculateTimeLeft = () => {
-      const now = new Date()
-      const difference = firstRoundDate.getTime() - now.getTime()
+  // Handle dark mode toggle with persistence
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkModeState((prev) => {
+      const newMode = !prev
+      setDarkMode(newMode)
+      return newMode
+    })
+  }, [])
 
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        })
-      } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-      }
+  // Timer effect - optimized
+  useEffect(() => {
+    const calculateAndUpdate = () => {
+      setTimeLeft(calculateTimeLeft(FIRST_ROUND_DATE))
     }
 
-    calculateTimeLeft()
-    const timer = setInterval(calculateTimeLeft, 1000)
+    calculateAndUpdate() // Initial calculation
+    const timer = setInterval(calculateAndUpdate, 1000)
 
     return () => clearInterval(timer)
   }, [])
 
+
+  // Memoized background gradient
+  const bgGradient = useMemo(
+    () => (isDarkMode ? ELECTION_COLORS.darkBg : ELECTION_COLORS.lightBg),
+    [isDarkMode]
+  )
+
+  // Prevent hydration mismatch by only rendering after mount
+  if (!mounted) {
+    return (
+      <div className={`min-h-screen transition-colors duration-300 ${ELECTION_COLORS.lightBg}`}>
+        <div className="p-4 md:p-8 flex items-center justify-center h-screen">
+          <div className="text-white text-center">
+            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p>Cargando...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div
-      className={`min-h-screen transition-colors duration-300 ${
-        isDarkMode
-          ? "bg-gradient-to-br from-gray-900 via-blue-950 to-red-950"
-          : "bg-gradient-to-br from-[#0039A6] via-blue-600 to-[#D52B1E]"
-      }`}
-    >
+    <div className={`min-h-screen transition-colors duration-300 ${bgGradient}`}>
       <div className="p-4 md:p-8">
         {/* Header */}
         <div className="max-w-6xl mx-auto mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h1
-              className={`text-3xl md:text-5xl font-bold transition-colors duration-300 ${
-                isDarkMode ? "text-white" : "text-white"
-              }`}
-            >
+            <h1 className="text-3xl md:text-5xl font-bold transition-colors duration-300 text-white">
               Elecciones Presidenciales Chile
             </h1>
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={toggleDarkMode}
               className={`p-3 rounded-lg transition-all duration-300 ${
                 isDarkMode
                   ? "bg-gray-700 hover:bg-gray-600 text-yellow-400"
@@ -125,223 +137,14 @@ export default function ElectionCountdown() {
                 </p>
               </div>
 
-              {/* Countdown */}
-              <div
-                className={`rounded-2xl p-8 md:p-12 mb-8 border-2 transition-colors duration-300 ${
-                  isDarkMode
-                    ? "bg-gray-900/50 border-[#0039A6]/30"
-                    : "bg-white/5 border-[#D52B1E]/30"
-                }`}
-              >
-                <h3
-                  className={`text-2xl md:text-3xl font-bold mb-8 text-center transition-colors duration-300 ${
-                    isDarkMode ? "text-white" : "text-white"
-                  }`}
-                >
-                  Cuenta Regresiva
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                  {[
-                    { value: timeLeft.days, label: "Días" },
-                    { value: timeLeft.hours, label: "Horas" },
-                    { value: timeLeft.minutes, label: "Minutos" },
-                    { value: timeLeft.seconds, label: "Segundos" },
-                  ].map((item, index) => (
-                    <div
-                      key={index}
-                      className={`rounded-xl p-4 md:p-6 text-center backdrop-blur-sm transition-colors duration-300 ${
-                        isDarkMode
-                          ? "bg-[#0039A6]/20 border border-[#0039A6]/40"
-                          : "bg-white/10"
-                      }`}
-                    >
-                      <div
-                        className={`text-5xl md:text-6xl font-bold mb-2 transition-colors duration-300 ${
-                          isDarkMode ? "text-white" : "text-white"
-                        }`}
-                      >
-                        {item.value}
-                      </div>
-                      <div
-                        className={`text-sm md:text-lg uppercase tracking-wider transition-colors duration-300 ${
-                          isDarkMode ? "text-gray-300" : "text-white/70"
-                        }`}
-                      >
-                        {item.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Countdown Timer Component */}
+              <CountdownTimer timeLeft={timeLeft} isDarkMode={isDarkMode} />
 
-              {/* Candidates */}
-              <div className="mb-8">
-                <h3
-                  className={`text-xl font-semibold mb-4 text-center transition-colors duration-300 ${
-                    isDarkMode ? "text-white" : "text-white"
-                  }`}
-                >
-                  Candidatos Primera Vuelta (8 Candidatos)
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {candidates.map((candidate, index) => (
-                    <div
-                      key={index}
-                      className={`px-4 py-4 rounded-lg text-sm font-medium shadow-lg transition-all duration-300 text-center ${
-                        isDarkMode
-                          ? "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-                          : "bg-black/30 text-white border border-white/20 hover:bg-black/40"
-                      }`}
-                    >
-                      <div className="font-semibold">{candidate.name}</div>
-                      <div
-                        className={`text-xs mt-2 ${
-                          isDarkMode ? "text-gray-300" : "text-white/80"
-                        }`}
-                      >
-                        {candidate.party}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Candidates Grid Component */}
+              <CandidatesGrid isDarkMode={isDarkMode} />
 
-              {/* Info Grid */}
-              <div className="grid md:grid-cols-3 gap-4">
-                <div
-                  className={`rounded-xl p-4 transition-colors duration-300 ${
-                    isDarkMode
-                      ? "bg-gray-900/50 border border-gray-700"
-                      : "bg-white/5"
-                  }`}
-                >
-                  <h4
-                    className={`text-sm font-semibold mb-3 flex items-center gap-2 transition-colors duration-300 ${
-                      isDarkMode ? "text-white" : "text-white/90"
-                    }`}
-                  >
-                    <span>🗳️</span>
-                    Fechas Importantes
-                  </h4>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex flex-col gap-1">
-                      <span
-                        className={`transition-colors duration-300 ${
-                          isDarkMode ? "text-gray-400" : "text-white/70"
-                        }`}
-                      >
-                        Primera Vuelta
-                      </span>
-                      <span
-                        className={`font-semibold transition-colors duration-300 ${
-                          isDarkMode ? "text-white" : "text-white"
-                        }`}
-                      >
-                        16 nov 2025
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span
-                        className={`transition-colors duration-300 ${
-                          isDarkMode ? "text-gray-400" : "text-white/70"
-                        }`}
-                      >
-                        Segunda Vuelta
-                      </span>
-                      <span
-                        className={`font-semibold transition-colors duration-300 ${
-                          isDarkMode ? "text-white" : "text-white"
-                        }`}
-                      >
-                        14 dic 2025
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className={`rounded-xl p-4 transition-colors duration-300 ${
-                    isDarkMode
-                      ? "bg-gray-900/50 border border-gray-700"
-                      : "bg-white/5"
-                  }`}
-                >
-                  <h4
-                    className={`text-sm font-semibold mb-3 flex items-center gap-2 transition-colors duration-300 ${
-                      isDarkMode ? "text-white" : "text-white/90"
-                    }`}
-                  >
-                    <span>📅</span>
-                    Período Presidencial
-                  </h4>
-                  <div className="text-xs space-y-2">
-                    <div>
-                      <p
-                        className={`transition-colors duration-300 ${
-                          isDarkMode ? "text-gray-400" : "text-white/70"
-                        }`}
-                      >
-                        Inicio
-                      </p>
-                      <p
-                        className={`font-semibold transition-colors duration-300 ${
-                          isDarkMode ? "text-white" : "text-white"
-                        }`}
-                      >
-                        11 marzo 2026
-                      </p>
-                    </div>
-                    <div>
-                      <p
-                        className={`transition-colors duration-300 ${
-                          isDarkMode ? "text-gray-400" : "text-white/70"
-                        }`}
-                      >
-                        Término
-                      </p>
-                      <p
-                        className={`font-semibold transition-colors duration-300 ${
-                          isDarkMode ? "text-white" : "text-white"
-                        }`}
-                      >
-                        11 marzo 2030
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className={`rounded-xl p-4 transition-colors duration-300 ${
-                    isDarkMode
-                      ? "bg-gray-900/50 border border-gray-700"
-                      : "bg-white/5"
-                  }`}
-                >
-                  <h4
-                    className={`text-sm font-semibold mb-3 flex items-center gap-2 transition-colors duration-300 ${
-                      isDarkMode ? "text-white" : "text-white/90"
-                    }`}
-                  >
-                    <span>ℹ️</span>
-                    Información
-                  </h4>
-                  <div
-                    className={`space-y-1 text-xs transition-colors duration-300 ${
-                      isDarkMode ? "text-gray-300" : "text-white/80"
-                    }`}
-                  >
-                    <p>
-                      <strong>Tipo:</strong> Presidencial
-                    </p>
-                    <p>
-                      <strong>Nivel:</strong> Nacional
-                    </p>
-                    <p>
-                      <strong>Duración:</strong> 4 años
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Election Info Component */}
+              <ElectionInfo isDarkMode={isDarkMode} />
             </div>
           ) : activeTab === "2021" ? (
             <div

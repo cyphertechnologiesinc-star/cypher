@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { memo } from "react"
 
 interface ElectionTabsProps {
   isDarkMode: boolean
@@ -8,7 +8,7 @@ interface ElectionTabsProps {
   onTabChange: (tab: "2021" | "2025" | "historial") => void
 }
 
-export default function ElectionTabs({
+const ElectionTabs = memo(function ElectionTabs({
   isDarkMode,
   activeTab,
   onTabChange,
@@ -45,4 +45,6 @@ export default function ElectionTabs({
       ))}
     </div>
   )
-}
+})
+
+export default ElectionTabs
