@@ -14,11 +14,14 @@ export default function ElectionCountdown() {
   })
 
   const candidates = [
-    { name: "Evelyn Matthei", winner: null },
-    { name: "Michelle Bachelet", winner: null },
-    { name: "Rodolfo Carter", winner: null },
-    { name: "Johannes Kaiser", winner: null },
-    { name: "Franco Parisi", winner: null }
+    { name: "Jeanette Jara", party: "Comunista/Frente Amplio", winner: null },
+    { name: "Evelyn Matthei", party: "UDI/Chile Vamos", winner: null },
+    { name: "José Antonio Kast", party: "Republicano", winner: null },
+    { name: "Johannes Kaiser", party: "PLN", winner: null },
+    { name: "Franco Parisi", party: "Partido de la Gente", winner: null },
+    { name: "Marco Enríquez-Ominami", party: "Independiente", winner: null },
+    { name: "Harold Mayne-Nicholls", party: "Independiente", winner: null },
+    { name: "Eduardo Artés", party: "Independiente/Humanista", winner: null }
   ]
 
   useEffect(() => {
@@ -129,31 +132,34 @@ export default function ElectionCountdown() {
         </div>
 
         <div className="mb-6">
-          <h3 className={`text-lg font-semibold mb-3 text-center transition-colors duration-300 ${
+          <h3 className={`text-lg font-semibold mb-4 text-center transition-colors duration-300 ${
             isDarkMode ? "text-white" : "text-white"
           }`}>
-            Candidatos
+            Candidatos Primera Vuelta
           </h3>
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {candidates.map((candidate, index) => (
-              <span
+              <div
                 key={index}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium shadow-lg transition-all duration-300 ${
+                className={`px-4 py-3 rounded-lg text-sm font-medium shadow-lg transition-all duration-300 text-center ${
                   candidate.winner === "first-round"
                     ? "bg-green-600 text-white ring-4 ring-green-400/50"
                     : candidate.winner === "second-round"
-                    ? isDarkMode 
+                    ? isDarkMode
                       ? "bg-[#0039A6] text-white ring-4 ring-[#0039A6]/50"
                       : "bg-[#D52B1E] text-white ring-4 ring-[#D52B1E]/50"
                     : isDarkMode
                     ? "bg-gray-700 text-white border border-gray-600"
-                    : "bg-black text-white"
+                    : "bg-black/30 text-white border border-white/20"
                 }`}
               >
-                {candidate.name}
-                {candidate.winner === "first-round" && " 🏆"}
-                {candidate.winner === "second-round" && " 👑"}
-              </span>
+                <div className="font-semibold">{candidate.name}</div>
+                <div className={`text-xs mt-1 ${isDarkMode ? "text-gray-300" : "text-white/80"}`}>
+                  {candidate.party}
+                </div>
+                {candidate.winner === "first-round" && <div className="mt-1">🏆</div>}
+                {candidate.winner === "second-round" && <div className="mt-1">👑</div>}
+              </div>
             ))}
           </div>
         </div>
