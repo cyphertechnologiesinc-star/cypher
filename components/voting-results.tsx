@@ -1,9 +1,10 @@
 "use client"
 
-import { memo, useEffect, useState } from "react"
+import { memo, useMemo } from "react"
 import { TrendingUp } from "lucide-react"
 import type { VotingStats } from "@/lib/voting-results"
-import { getVotingResults, formatVotes } from "@/lib/voting-results"
+import { formatVotes, getCandidateColor } from "@/lib/voting-results"
+import { useElectionData } from "@/lib/use-election-data"
 
 interface VotingResultsProps {
   isDarkMode: boolean
@@ -12,23 +13,27 @@ interface VotingResultsProps {
 const VotingResults = memo(function VotingResults({
   isDarkMode,
 }: VotingResultsProps) {
-  const [results, setResults] = useState<VotingStats | null>(null)
-  const [mounted, setMounted] = useState(false)
+  const { data, loading } = useElectionData()
 
-  useEffect(() => {
-    // Get initial voting results
-    setResults(getVotingResults())
-    setMounted(true)
+  // Transform election data to voting stats
+  const results = useMemo((): VotingStats | null => {
+    if (!data) return null
 
-    // Refresh results every 30 seconds
-    const interval = setInterval(() => {
-      setResults(getVotingResults())
-    }, 30000)
+    return {
+      totalVotes: data.totalVotes,
+      percentageProcessed: data.scrutinizedPercentage,
+      lastUpdated: new Date(),
+      candidates: data.candidates.map((candidate, idx) => ({
+        name: candidate.name,
+        party: "",
+        votes: candidate.votes,
+        percentage: (candidate.votes / data.validVotes) * 100,
+        color: getCandidateColor(idx),
+      })),
+    }
+  }, [data])
 
-    return () => clearInterval(interval)
-  }, [])
-
-  if (!mounted || !results) return null
+  if (loading || !results) return null
 
   // Check if results are available
   const hasResults = results.totalVotes > 0
@@ -141,20 +146,29 @@ const VotingResults = memo(function VotingResults({
             isDarkMode ? "border-gray-700/50" : "border-white/10"
           }`}
         >
-          <div className="flex justify-between items-center text-xs">
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-center text-xs">
+              <p
+                className={`transition-colors duration-300 ${
+                  isDarkMode ? "text-gray-500" : "text-white/50"
+                }`}
+              >
+                Total: {formatVotes(results.totalVotes)} votos
+              </p>
+              <p
+                className={`transition-colors duration-300 font-semibold ${
+                  isDarkMode ? "text-green-400" : "text-green-300"
+                }`}
+              >
+                ✓ {results.percentageProcessed.toFixed(2)}% escrutado
+              </p>
+            </div>
             <p
-              className={`transition-colors duration-300 ${
-                isDarkMode ? "text-gray-500" : "text-white/50"
+              className={`text-xs transition-colors duration-300 ${
+                isDarkMode ? "text-gray-600" : "text-white/40"
               }`}
             >
-              Total: {formatVotes(results.totalVotes)} votos
-            </p>
-            <p
-              className={`transition-colors duration-300 ${
-                isDarkMode ? "text-gray-500" : "text-white/50"
-              }`}
-            >
-              Actualizado: {results.lastUpdated.toLocaleTimeString("es-CL")}
+              Datos de SERVEL - Primera Vuelta 17 de noviembre de 2025
             </p>
           </div>
         </div>
