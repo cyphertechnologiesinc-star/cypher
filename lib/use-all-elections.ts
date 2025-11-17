@@ -1,10 +1,42 @@
 import { useState, useEffect } from 'react';
 import { supabase } from './supabase-client';
-import XLSX from 'xlsx';
 import { type ElectionData } from './excel-parser';
 
-export function useElectionDataSupabase() {
-  const [data, setData] = useState<ElectionData | null>(null);
+export interface AllElectionsData {
+  latest: ElectionData | null;
+  elections2025: ElectionData | null;
+  elections2021: ElectionData | null;
+  allHistorical: ElectionData[];
+  loading: boolean;
+  error: string | null;
+  source: 'supabase' | 'local';
+}
+
+function transformDbToElectionData(dbData: any): ElectionData {
+  return {
+    title: dbData.title,
+    dataDate: dbData.data_date,
+    emissionDate: dbData.emission_date,
+    totalMesas: dbData.total_mesas,
+    installedMesas: dbData.installed_mesas,
+    scrutinizedMesas: dbData.scrutinized_mesas,
+    scrutinizedPercentage: dbData.scrutinized_percentage,
+    candidates: dbData.candidates.sort((a: any, b: any) => b.votes - a.votes),
+    validVotes: dbData.valid_votes,
+    validPercentage: dbData.valid_percentage,
+    nullVotes: dbData.null_votes,
+    nullPercentage: dbData.null_percentage,
+    blankVotes: dbData.blank_votes,
+    blankPercentage: dbData.blank_percentage,
+    totalVotes: dbData.total_votes,
+  };
+}
+
+export function useAllElections(): AllElectionsData {
+  const [latest, setLatest] = useState<ElectionData | null>(null);
+  const [elections2025, setElections2025] = useState<ElectionData | null>(null);
+  const [elections2021, setElections2021] = useState<ElectionData | null>(null);
+  const [allHistorical, setAllHistorical] = useState<ElectionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<'supabase' | 'local'>('local');
@@ -15,46 +47,38 @@ export function useElectionDataSupabase() {
         setLoading(true);
         setError(null);
 
-        // Try Supabase first
         if (supabase) {
           try {
-            // Get the most recent election by data_date (not updated_at)
-            const { data: dbData, error: dbError } = await supabase
+            // Get all elections ordered by data_date
+            const { data: allData, error: dbError } = await supabase
               .from('election_data')
               .select('*')
-              .order('data_date', { ascending: false })
-              .limit(1)
-              .single();
+              .order('data_date', { ascending: false });
 
-            if (!dbError && dbData) {
-              // Transform Supabase data to ElectionData format
-              const electionData: ElectionData = {
-                title: dbData.title,
-                dataDate: dbData.data_date,
-                emissionDate: dbData.emission_date,
-                totalMesas: dbData.total_mesas,
-                installedMesas: dbData.installed_mesas,
-                scrutinizedMesas: dbData.scrutinized_mesas,
-                scrutinizedPercentage: dbData.scrutinized_percentage,
-                candidates: dbData.candidates.sort((a, b) => b.votes - a.votes),
-                validVotes: dbData.valid_votes,
-                validPercentage: dbData.valid_percentage,
-                nullVotes: dbData.null_votes,
-                nullPercentage: dbData.null_percentage,
-                blankVotes: dbData.blank_votes,
-                blankPercentage: dbData.blank_percentage,
-                totalVotes: dbData.total_votes,
-              };
+            if (!dbError && allData && allData.length > 0) {
+              // Transform all data
+              const transformedData = allData.map(transformDbToElectionData);
 
-              setData(electionData);
+              // Find latest (first in descending order)
+              setLatest(transformedData[0]);
+
+              // Find 2025 and 2021 elections
+              const election2025 = transformedData.find(
+                (e) => e.title.includes('2025')
+              );
+              const election2021 = transformedData.find(
+                (e) => e.title.includes('2021')
+              );
+
+              setElections2025(election2025 || null);
+              setElections2021(election2021 || null);
+              setAllHistorical(transformedData);
               setSource('supabase');
               return;
             }
           } catch (supabaseError) {
             console.warn('Supabase read failed, falling back to local Excel:', supabaseError);
           }
-        } else {
-          console.log('Supabase not configured, using local Excel fallback');
         }
 
         // Fallback to local Excel file
@@ -64,6 +88,7 @@ export function useElectionDataSupabase() {
         }
 
         const arrayBuffer = await response.arrayBuffer();
+        const XLSX = await import('xlsx');
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
@@ -127,7 +152,8 @@ export function useElectionDataSupabase() {
           totalVotes
         };
 
-        setData(electionData);
+        setLatest(electionData);
+        setAllHistorical([electionData]);
         setSource('local');
       } catch (err) {
         console.error('Error loading election data:', err);
@@ -140,5 +166,13 @@ export function useElectionDataSupabase() {
     loadData();
   }, []);
 
-  return { data, loading, error, source };
+  return {
+    latest,
+    elections2025,
+    elections2021,
+    allHistorical,
+    loading,
+    error,
+    source,
+  };
 }

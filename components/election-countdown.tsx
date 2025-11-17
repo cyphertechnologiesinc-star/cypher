@@ -12,6 +12,7 @@ import VotingResults from "./voting-results"
 import ElectionSummaryHome from "./election-summary-home"
 import { calculateTimeLeft, getDarkMode, setDarkMode } from "@/lib/helpers"
 import { FIRST_ROUND_DATE, ELECTION_COLORS } from "@/lib/constants"
+import { useAllElections } from "@/lib/use-all-elections"
 import type { TimeLeft } from "@/lib/helpers"
 
 // Dynamic imports for performance
@@ -19,6 +20,7 @@ const Election2021 = dynamic(() => import("./election-2021"))
 const HistoricalElections = dynamic(() => import("./historical-elections"))
 
 export default function ElectionCountdown() {
+  const { latest, elections2025, elections2021, allHistorical, loading } = useAllElections()
   const [isDarkMode, setIsDarkModeState] = useState(false)
   const [activeTab, setActiveTab] = useState<"2021" | "2025" | "historial">("2025")
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
@@ -44,6 +46,23 @@ export default function ElectionCountdown() {
       return newMode
     })
   }, [])
+
+  // Determine active tab based on latest election from Supabase
+  useEffect(() => {
+    if (!loading && latest) {
+      // Extract year from title (e.g., "Elección Presidencial 2025 - Primera Vuelta")
+      const yearMatch = latest.title.match(/(\d{4})/);
+      const year = yearMatch ? yearMatch[1] : '2025';
+
+      if (year === '2025') {
+        setActiveTab('2025');
+      } else if (year === '2021') {
+        setActiveTab('2021');
+      } else {
+        setActiveTab('historial');
+      }
+    }
+  }, [latest, loading])
 
   // Timer effect - optimized
   useEffect(() => {

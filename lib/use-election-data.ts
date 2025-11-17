@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useElectionDataSupabase } from './use-election-data-supabase';
 import { type ElectionData } from './excel-parser';
+import { useAllElections } from './use-all-elections';
 
 export function useElectionData() {
-  const { data, loading, error, source } = useElectionDataSupabase();
+  const { latest, loading, error, source } = useAllElections();
 
-  return { data, loading, error, source };
+  return { data: latest, loading, error, source };
 }
