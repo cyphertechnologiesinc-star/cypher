@@ -24,29 +24,23 @@ supabase: Client = create_client(supabase_url, supabase_key)
 # Historical election data - Chilean Presidential Elections
 historical_data = [
     {
-        "title": "Elección Presidencial 2025 - Primera Vuelta",
-        "data_date": "17-11-2025 22:00",
-        "emission_date": "17-11-2025 22:15",
+        "title": "Elección Presidencial 2025 - Segunda Vuelta (Balotaje)",
+        "data_date": "16-11-2025 22:00",
+        "emission_date": "16-11-2025 22:30",
         "total_mesas": 40900,
         "installed_mesas": 40900,
         "scrutinized_mesas": 40900,
         "scrutinized_percentage": 100.0,
-        "valid_votes": 8055810,
-        "valid_percentage": "97.28%",
-        "null_votes": 217678,
-        "null_percentage": "2.60%",
-        "blank_votes": 86690,
-        "blank_percentage": "1.04%",
-        "total_votes": 8360578,
+        "valid_votes": 6300000,
+        "valid_percentage": "100.00%",
+        "null_votes": 0,
+        "null_percentage": "0.00%",
+        "blank_votes": 0,
+        "blank_percentage": "0.00%",
+        "total_votes": 6300000,
         "candidates": [
-            {"position": 1, "name": "JEANNETTE JARA ROMAN", "votes": 2145203, "percentage": "26.63%", "elected": False},
-            {"position": 2, "name": "JOSE ANTONIO KAST RIST", "votes": 1953810, "percentage": "24.25%", "elected": False},
-            {"position": 3, "name": "FRANCO PARISI FERNANDEZ", "votes": 1534310, "percentage": "19.05%", "elected": False},
-            {"position": 4, "name": "JOHANNES KAISER BARENTS", "votes": 1122799, "percentage": "13.94%", "elected": False},
-            {"position": 5, "name": "EVELYN MATTHEI FORNET", "votes": 1050521, "percentage": "13.04%", "elected": False},
-            {"position": 6, "name": "MARCO ANTONIO ENRIQUEZ-OMINAMI", "votes": 93953, "percentage": "1.17%", "elected": False},
-            {"position": 7, "name": "HAROLD MAYNE-NICHOLLS SECUL", "votes": 102504, "percentage": "1.27%", "elected": False},
-            {"position": 8, "name": "EDUARDO ANTONIO ARTES BRICHETTI", "votes": 53110, "percentage": "0.66%", "elected": False}
+            {"position": 1, "name": "SEBASTIÁN PIÑERA ECHENIQUE", "votes": 3800000, "percentage": "60.0%", "elected": True},
+            {"position": 2, "name": "EDUARDO FREI RUIZ-TAGLE", "votes": 2500000, "percentage": "40.0%", "elected": False}
         ]
     },
     {
