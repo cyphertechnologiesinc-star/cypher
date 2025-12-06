@@ -100,44 +100,43 @@ export default function ElectionCountdown() {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${bgGradient}`}>
-      <div className="p-4 md:p-8">
-        {/* Header - Nike Style */}
-        <div className="flex flex-col items-center mb-16 md:mb-24">
-          <div className="relative w-full flex justify-center items-center mb-8 md:mb-12">
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-black transition-colors duration-300 text-white text-center tracking-tight">
-              CHILE 2025
-            </h1>
-            <button
-              onClick={toggleDarkMode}
-              className={`p-3 rounded-full transition-all duration-300 absolute right-4 md:right-8 top-0 ${
-                isDarkMode
-                  ? "bg-gray-700 hover:bg-gray-600 text-yellow-400"
-                  : "bg-white/10 hover:bg-white/20 text-white"
-              }`}
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? (
-                <Sun className="w-6 h-6" />
-              ) : (
-                <Moon className="w-6 h-6" />
-              )}
-            </button>
-          </div>
-
-          <p className={`text-sm md:text-base font-light tracking-widest mb-8 transition-colors duration-300 ${
-            isDarkMode ? "text-gray-500" : "text-white/60"
-          }`}>
+    <div className="min-h-screen bg-gov-white">
+      {/* Hero Background Section */}
+      <div className="hero-bg min-h-[500px] md:min-h-[600px] flex flex-col items-center justify-center px-4 py-12 md:py-20">
+        <div className="relative z-10 text-center mb-12 md:mb-16">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 hero-fade-in glow-blue">
+            CHILE 2025
+          </h1>
+          <p className="text-base md:text-lg font-light tracking-widest text-white/80 hero-fade-in">
             ELECCIONES PRESIDENCIALES
           </p>
+        </div>
 
-          {/* Navigation Tabs */}
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={toggleDarkMode}
+          className="absolute top-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-300 z-20"
+          aria-label="Toggle dark mode"
+        >
+          {isDarkMode ? (
+            <Sun className="w-6 h-6" />
+          ) : (
+            <Moon className="w-6 h-6" />
+          )}
+        </button>
+
+        {/* Navigation Tabs */}
+        <div className="mt-12">
           <ElectionTabs
             isDarkMode={isDarkMode}
             activeTab={activeTab}
             onTabChange={setActiveTab}
           />
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="bg-gov-white p-4 md:p-8">
 
         {/* Content Container */}
         <div className="max-w-6xl mx-auto">
