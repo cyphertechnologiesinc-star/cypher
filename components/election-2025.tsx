@@ -11,7 +11,7 @@ interface Election2025Props {
 }
 
 const Election2025 = memo(function Election2025({ isDarkMode }: Election2025Props) {
-  const [showSecondRound, setShowSecondRound] = useState(false)
+  const [showSecondRound, setShowSecondRound] = useState(true)
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
