@@ -102,18 +102,18 @@ export default function ElectionCountdown() {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${bgGradient}`}>
       <div className="p-4 md:p-8">
-        {/* Header */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="relative w-full flex justify-center mb-6">
-            <h1 className="text-3xl md:text-5xl font-bold transition-colors duration-300 text-white text-center">
-              Elecciones Presidenciales Chile
+        {/* Header - Nike Style */}
+        <div className="flex flex-col items-center mb-16 md:mb-24">
+          <div className="relative w-full flex justify-center items-center mb-8 md:mb-12">
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-black transition-colors duration-300 text-white text-center tracking-tight">
+              CHILE 2025
             </h1>
             <button
               onClick={toggleDarkMode}
-              className={`p-3 rounded-lg transition-all duration-300 absolute right-4 md:right-8 top-0 ${
+              className={`p-3 rounded-full transition-all duration-300 absolute right-4 md:right-8 top-0 ${
                 isDarkMode
                   ? "bg-gray-700 hover:bg-gray-600 text-yellow-400"
-                  : "bg-white/20 hover:bg-white/30 text-white"
+                  : "bg-white/10 hover:bg-white/20 text-white"
               }`}
               aria-label="Toggle dark mode"
             >
@@ -124,6 +124,12 @@ export default function ElectionCountdown() {
               )}
             </button>
           </div>
+
+          <p className={`text-sm md:text-base font-light tracking-widest mb-8 transition-colors duration-300 ${
+            isDarkMode ? "text-gray-500" : "text-white/60"
+          }`}>
+            ELECCIONES PRESIDENCIALES
+          </p>
 
           {/* Navigation Tabs */}
           <ElectionTabs
