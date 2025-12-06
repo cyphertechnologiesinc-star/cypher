@@ -1,0 +1,659 @@
+/* Cypher Elections Dashboard - Theme v3.0 */
+/* Gob.cl Institucional + DecideChile + Neon Futurista */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  /* ====== COLORES INSTITUCIONALES ====== */
+  --gov-blue: #0038A8;
+  --gov-red: #D52B1E;
+  --gov-white: #FFFFFF;
+  --gov-gray: #F4F7FA;
+
+  /* ====== COLORES DE TEXTO ====== */
+  --text-dark: #1A1A1A;
+  --text-mid: #4D4D4D;
+  --text-light: #999999;
+
+  /* ====== BORDES ====== */
+  --border-light: #D7D9DD;
+
+  /* ====== ACENTOS NEON ====== */
+  --neon-blue: #6CCAFF;
+  --neon-purple: #B57CFF;
+  --glow-blue: rgba(108, 202, 255, 0.35);
+  --glow-purple: rgba(181, 124, 255, 0.35);
+
+  /* ====== ESPACIOS ====== */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ====== BORDER RADIUS ====== */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+
+  /* ====== TIPOGRAFÍA ====== */
+  --font-primary: 'Inter', sans-serif;
+  --font-headers: 'Orbitron', monospace;
+
+  /* ====== TRANSICIONES ====== */
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.6s ease;
+
+  /* ====== SHADOWS ====== */
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
+  --shadow-neon: 0 0 20px rgba(108, 202, 255, 0.5);
+}
+
+/* ====== RESET BASE ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--gov-white);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* ====== TIPOGRAFÍA BASE ====== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headers);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 72px;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 48px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+h4 {
+  font-size: 24px;
+}
+
+h5 {
+  font-size: 20px;
+}
+
+h6 {
+  font-size: 16px;
+}
+
+p {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+small {
+  font-size: 12px;
+}
+
+/* ====== ANIMACIONES KEYFRAMES ====== */
+
+/* Hero Fade In */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Countdown Pulse */
+@keyframes countdownPulse {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 20px rgba(108, 202, 255, 0.5);
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 30px rgba(108, 202, 255, 0.8);
+  }
+}
+
+/* Neon Glow */
+@keyframes neonGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(108, 202, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(108, 202, 255, 0.8);
+  }
+}
+
+/* Slide In From Left */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade In Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale In */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ====== CLASES DE UTILIDAD ====== */
+
+/* Hero Background */
+.hero-bg {
+  background: radial-gradient(circle at 30% 70%, var(--gov-blue), var(--gov-red));
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--glow-blue), transparent 70%);
+  pointer-events: none;
+}
+
+/* Glow Effects */
+.glow-blue {
+  text-shadow: 0 0 30px var(--glow-blue);
+  filter: drop-shadow(0 0 20px var(--neon-blue));
+}
+
+.glow-purple {
+  text-shadow: 0 0 30px var(--glow-purple);
+  filter: drop-shadow(0 0 20px var(--neon-purple));
+}
+
+.glow-box {
+  box-shadow: var(--shadow-neon);
+}
+
+.glow-box:hover {
+  box-shadow: 0 0 30px rgba(108, 202, 255, 0.8);
+}
+
+/* Progress Bar Neon */
+.progress-neon {
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  box-shadow: 0 0 15px var(--glow-blue), inset 0 0 10px var(--glow-purple);
+}
+
+/* Cards */
+.card {
+  background-color: var(--gov-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-fast);
+}
+
+.card:hover {
+  border: 2px solid var(--gov-blue);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Tab Active */
+.tab-active {
+  background-color: rgba(0, 56, 168, 0.12);
+  border-bottom: 2px solid var(--gov-blue);
+  color: var(--gov-blue);
+}
+
+.tab-inactive {
+  border: 1px solid var(--border-light);
+  color: var(--text-mid);
+  transition: all var(--transition-fast);
+}
+
+.tab-inactive:hover {
+  border-color: var(--gov-blue);
+}
+
+/* Button Styles */
+.btn {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--gov-blue);
+  color: var(--gov-white);
+}
+
+.btn-primary:hover {
+  background-color: #002870;
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-secondary {
+  background-color: var(--gov-gray);
+  color: var(--gov-blue);
+  border: 1px solid var(--border-light);
+}
+
+.btn-secondary:hover {
+  background-color: #E8EBF0;
+  border-color: var(--gov-blue);
+}
+
+/* Links */
+a {
+  color: var(--gov-blue);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: #006BD0;
+  text-decoration: underline;
+}
+
+/* ====== LAYOUT ====== */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+.section {
+  padding: var(--space-3xl) 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .container {
+    padding: 0 var(--space-lg);
+  }
+
+  h1 {
+    font-size: 48px;
+  }
+
+  h2 {
+    font-size: 36px;
+  }
+}
+
+/* ====== GRID 12 COLUMNAS ====== */
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .grid-12 {
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-12 {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
+
+/* ====== NAVBAR ====== */
+
+.navbar {
+  height: 72px;
+  background-color: var(--gov-white);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.navbar-logo {
+  font-family: var(--font-headers);
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--gov-blue);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.navbar-links {
+  display: flex;
+  gap: var(--space-2xl);
+  list-style: none;
+}
+
+.navbar-link {
+  color: var(--text-mid);
+  transition: color var(--transition-fast);
+  font-weight: 500;
+  position: relative;
+}
+
+.navbar-link:hover {
+  color: var(--gov-blue);
+}
+
+.navbar-link.active {
+  color: var(--gov-blue);
+  border-bottom: 3px solid var(--gov-blue);
+}
+
+/* ====== HERO SECTION ====== */
+
+.hero {
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-title {
+  font-family: var(--font-headers);
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--gov-white);
+  margin-bottom: var(--space-lg);
+  animation: heroFadeIn 0.6s ease-out;
+}
+
+.hero-subtitle {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  color: var(--text-mid);
+  margin-bottom: var(--space-3xl);
+  animation: heroFadeIn 0.8s ease-out;
+}
+
+.countdown-display {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2xl);
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.countdown-item {
+  text-align: center;
+}
+
+.countdown-digit {
+  font-family: var(--font-headers);
+  font-size: 120px;
+  font-weight: 900;
+  color: var(--neon-blue);
+  line-height: 1;
+  animation: countdownPulse 2s ease-in-out infinite;
+}
+
+.countdown-label {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-top: var(--space-md);
+  letter-spacing: 1px;
+}
+
+/* ====== CARDS ELECTORALES ====== */
+
+.card-electoral {
+  background-color: var(--gov-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  transition: all var(--transition-fast);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.card-electoral:hover {
+  border-color: var(--gov-blue);
+  border-width: 2px;
+  box-shadow: var(--shadow-hover);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.card-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--gov-gray);
+  flex-shrink: 0;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-name {
+  font-family: var(--font-headers);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gov-blue);
+}
+
+.card-party {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  color: var(--text-mid);
+  margin-top: 4px;
+}
+
+.card-percentage {
+  font-family: var(--font-headers);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gov-blue);
+  text-align: right;
+  animation: scaleIn 0.6s ease-out;
+}
+
+.card-bar {
+  width: 100%;
+  height: 12px;
+  background-color: var(--gov-gray);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: var(--space-md) 0;
+}
+
+.card-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gov-blue), var(--neon-blue));
+  transition: width 0.8s ease-out;
+}
+
+.card-metadata {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  color: var(--text-light);
+  text-align: right;
+}
+
+/* ====== FOOTER ====== */
+
+.footer {
+  background-color: var(--gov-gray);
+  border-top: 1px solid var(--border-light);
+  padding: var(--space-2xl) 0;
+  margin-top: var(--space-3xl);
+}
+
+.footer-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.footer-text {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.footer-link {
+  color: var(--gov-blue);
+}
+
+.footer-link:hover {
+  color: #006BD0;
+  text-decoration: underline;
+}
+
+/* ====== RESPONSIVE ====== */
+
+@media (max-width: 1024px) {
+  .countdown-display {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .countdown-digit {
+    font-size: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 64px;
+    padding: 0 var(--space-md);
+  }
+
+  .navbar-links {
+    gap: var(--space-lg);
+  }
+
+  .hero {
+    min-height: 400px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+  }
+
+  .countdown-digit {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdown-display {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .countdown-digit {
+    font-size: 40px;
+  }
+
+  .countdown-label {
+    font-size: 12px;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .card-electoral {
+    padding: var(--space-md);
+  }
+}
+
+/* ====== ACCESSIBILITY ====== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gov-white: #1A1A1A;
+    --card-bg: #262626;
+    --gov-gray: #333333;
+    --text-dark: #FFFFFF;
+    --text-mid: #CCCCCC;
+    --border-light: #444444;
+  }
+
+  body {
+    background-color: #0F0F0F;
+    color: #FFFFFF;
+  }
+}
