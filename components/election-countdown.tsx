@@ -19,6 +19,7 @@ import type { TimeLeft } from "@/lib/helpers"
 const Election2025 = dynamic(() => import("./election-2025"))
 const Election2021 = dynamic(() => import("./election-2021"))
 const HistoricalElections = dynamic(() => import("./historical-elections"))
+const ElectionSummary = dynamic(() => import("./election-summary"))
 
 export default function ElectionCountdown() {
   const { latest, elections2025, elections2021, allHistorical, loading } = useAllElections()
@@ -168,6 +169,19 @@ export default function ElectionCountdown() {
         </div>
 
         {/* Election Summary Section - Only for 2025 tab */}
+        {activeTab === "2025" && (
+          <div className="mt-8">
+            <div
+              className={`backdrop-blur-lg rounded-3xl shadow-2xl p-8 md:p-12 transition-colors duration-300 ${
+                isDarkMode
+                  ? "bg-gray-800/90 border border-gray-700"
+                  : "bg-white/10 border-2 border-white/20"
+              }`}
+            >
+              <ElectionSummary isDarkMode={isDarkMode} />
+            </div>
+          </div>
+        )}
         {activeTab === "2025" && <ElectionSummaryHome />}
       </div>
     </div>
