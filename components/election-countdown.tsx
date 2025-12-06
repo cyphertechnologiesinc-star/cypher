@@ -103,14 +103,14 @@ export default function ElectionCountdown() {
     <div className={`min-h-screen transition-colors duration-300 ${bgGradient}`}>
       <div className="p-4 md:p-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-center items-center mb-6 relative">
-            <h1 className="text-3xl md:text-5xl font-bold transition-colors duration-300 text-white">
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative w-full flex justify-center mb-6">
+            <h1 className="text-3xl md:text-5xl font-bold transition-colors duration-300 text-white text-center">
               Elecciones Presidenciales Chile
             </h1>
             <button
               onClick={toggleDarkMode}
-              className={`p-3 rounded-lg transition-all duration-300 absolute right-0 ${
+              className={`p-3 rounded-lg transition-all duration-300 absolute right-4 md:right-8 top-0 ${
                 isDarkMode
                   ? "bg-gray-700 hover:bg-gray-600 text-yellow-400"
                   : "bg-white/20 hover:bg-white/30 text-white"
@@ -126,13 +126,11 @@ export default function ElectionCountdown() {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex justify-center">
-            <ElectionTabs
-              isDarkMode={isDarkMode}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-          </div>
+          <ElectionTabs
+            isDarkMode={isDarkMode}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
         </div>
 
         {/* Content Container */}
