@@ -1,7 +1,10 @@
 "use client"
 
-import { memo, useState } from "react"
+import { memo, useState, useEffect } from "react"
 import { ChevronRight } from "lucide-react"
+import { calculateTimeLeft, isElectionPassed } from "@/lib/helpers"
+import { SECOND_ROUND_DATE } from "@/lib/constants"
+import type { TimeLeft } from "@/lib/helpers"
 
 interface Election2025Props {
   isDarkMode: boolean
@@ -9,6 +12,27 @@ interface Election2025Props {
 
 const Election2025 = memo(function Election2025({ isDarkMode }: Election2025Props) {
   const [showSecondRound, setShowSecondRound] = useState(false)
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
+  const [electionPassed, setElectionPassed] = useState(false)
+
+  // Timer effect for countdown
+  useEffect(() => {
+    const calculateAndUpdate = () => {
+      const time = calculateTimeLeft(SECOND_ROUND_DATE)
+      setTimeLeft(time)
+      setElectionPassed(isElectionPassed(SECOND_ROUND_DATE))
+    }
+
+    calculateAndUpdate() // Initial calculation
+    const timer = setInterval(calculateAndUpdate, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
 
   const firstRoundCandidates = [
     { rank: 1, name: "Jeannette Jara Román", party: "Comunista/Frente Amplio", votes: 3_446_854, percentage: 26.75 },
@@ -222,8 +246,73 @@ const Election2025 = memo(function Election2025({ isDarkMode }: Election2025Prop
               isDarkMode ? "text-white" : "text-white"
             }`}
           >
-            Segunda Vuelta - En Curso
+            Segunda Vuelta - Balotaje 14 de Diciembre
           </h3>
+
+          {/* Countdown Timer */}
+          {!electionPassed && (
+            <div
+              className={`rounded-xl p-6 md:p-8 mb-8 transition-colors duration-300 ${
+                isDarkMode
+                  ? "bg-yellow-900/20 border-2 border-yellow-600/50"
+                  : "bg-yellow-500/20 border-2 border-yellow-400/50"
+              }`}
+            >
+              <div className="text-center mb-4">
+                <p
+                  className={`text-sm font-semibold transition-colors duration-300 ${
+                    isDarkMode ? "text-yellow-300" : "text-yellow-100"
+                  }`}
+                >
+                  ⏳ TIEMPO RESTANTE PARA LA ELECCIÓN
+                </p>
+              </div>
+              <div className="grid grid-cols-4 gap-3 md:gap-4">
+                {[
+                  { label: "Días", value: timeLeft.days },
+                  { label: "Horas", value: timeLeft.hours },
+                  { label: "Minutos", value: timeLeft.minutes },
+                  { label: "Segundos", value: timeLeft.seconds },
+                ].map((unit) => (
+                  <div key={unit.label} className="text-center">
+                    <div
+                      className={`text-3xl md:text-4xl font-bold mb-2 transition-colors duration-300 ${
+                        isDarkMode ? "text-yellow-300" : "text-yellow-100"
+                      }`}
+                    >
+                      {String(unit.value).padStart(2, "0")}
+                    </div>
+                    <div
+                      className={`text-xs md:text-sm font-semibold transition-colors duration-300 ${
+                        isDarkMode ? "text-yellow-400/70" : "text-yellow-200/70"
+                      }`}
+                    >
+                      {unit.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {electionPassed && (
+            <div
+              className={`rounded-xl p-6 md:p-8 mb-8 text-center transition-colors duration-300 ${
+                isDarkMode
+                  ? "bg-green-900/20 border-2 border-green-600/50"
+                  : "bg-green-500/20 border-2 border-green-400/50"
+              }`}
+            >
+              <p
+                className={`text-lg font-bold transition-colors duration-300 ${
+                  isDarkMode ? "text-green-300" : "text-green-100"
+                }`}
+              >
+                ✓ Elección completada
+              </p>
+            </div>
+          )}
+
           <div className="space-y-6">
             {secondRoundCandidates.map((candidate) => (
               <div
