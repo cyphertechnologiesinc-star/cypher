@@ -16,6 +16,7 @@ import { useAllElections } from "@/lib/use-all-elections"
 import type { TimeLeft } from "@/lib/helpers"
 
 // Dynamic imports for performance
+const Election2025 = dynamic(() => import("./election-2025"))
 const Election2021 = dynamic(() => import("./election-2021"))
 const HistoricalElections = dynamic(() => import("./historical-elections"))
 
@@ -141,38 +142,7 @@ export default function ElectionCountdown() {
                   : "bg-white/10 border-2 border-white/20"
               }`}
             >
-              {/* 2025 Content */}
-              <div className="text-center mb-8">
-                <h2
-                  className={`text-3xl md:text-4xl font-bold mb-3 text-balance transition-colors duration-300 ${
-                    isDarkMode ? "text-white" : "text-white"
-                  }`}
-                >
-                  Elección Presidencial 2025 - Primera Vuelta
-                </h2>
-                <p
-                  className={`text-lg transition-colors duration-300 ${
-                    isDarkMode ? "text-gray-400" : "text-white/80"
-                  }`}
-                >
-                  16 de noviembre de 2025
-                </p>
-              </div>
-
-              {/* Voting Results Component */}
-              <VotingResults isDarkMode={isDarkMode} />
-
-              {/* Countdown Timer Component */}
-              <CountdownTimer timeLeft={timeLeft} isDarkMode={isDarkMode} />
-
-              {/* Voting Hours Countdown Component */}
-              <VotingHoursCountdown isDarkMode={isDarkMode} />
-
-              {/* Candidates Grid Component */}
-              <CandidatesGrid isDarkMode={isDarkMode} />
-
-              {/* Election Info Component */}
-              <ElectionInfo isDarkMode={isDarkMode} />
+              <Election2025 isDarkMode={isDarkMode} />
             </div>
           ) : activeTab === "2021" ? (
             <div
